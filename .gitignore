@@ -72,6 +72,8 @@ models/
 config/drive-public.json
 config/drive-sa.json
 config/sa-key.json
+storage/file-upload.json
+storage/.drive-public-sync.json
 
 # Storage directories with processed documents
 storage/documents/processed/
