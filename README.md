@@ -8,23 +8,122 @@ Modular, offline-first document processing pipeline for OCR, translation, summar
 - Offline-first design with deterministic fallbacks
 - Strict TypeScript types and ESM modules
 - Storage abstraction with JSON metadata persistence
+- Local transformer models for abstractive summarization
 
-## Quick Start (Windows PowerShell)
+## 🚀 Getting Started (For GitHub Clone)
+
+### Prerequisites
+- **Node.js 22.14.x** (see `.nvmrc`)
+- **Git** for cloning
+
+### Step 1: Clone Repository
 ```powershell
-# 1) Install dependencies
+git clone https://github.com/7236alok/kmrl-doc-processor.git
+cd kmrl-doc-processor
+```
+
+### Step 2: Install Dependencies
+```powershell
+# Install all npm dependencies
+npm install
+
+# Or use the setup script (if available)
 npm run setup-env
+```
 
-# 2) Start in dev mode (ts-node)
+### Step 3: Set Up Environment Variables
+Create a `.env` file in the root directory:
+```env
+# Optional - for enhanced AI features (not required for basic operation)
+OPENAI_API_KEY=your_openai_api_key_here
+HF_API_KEY=your_huggingface_api_key_here
+
+# OCR Configuration
+OCR_AUTO_DOWNLOAD=1
+OCR_LANGUAGES=eng,hin,mal
+```
+
+### Step 4: Download Required Models & Data
+
+#### A) Download Tesseract Language Data (Required for OCR)
+```powershell
+# Option 1: Automatic download (recommended)
+npm run download-tessdata
+
+# Option 2: Manual - files will auto-download on first OCR run if OCR_AUTO_DOWNLOAD=1
+```
+
+#### B) Download Transformer Models (Optional - for AI summarization)
+```powershell
+# Download pre-trained models for local AI processing
+npm run download-models
+
+# This downloads models to ./models/Xenova/ directory:
+# - t5-small (for summarization)
+# - distilbert-base-uncased-finetuned-sst-2-english (for classification)
+# - distilbart-cnn-6-6 (alternative summarization)
+```
+
+### Step 5: Build and Run
+```powershell
+# Build TypeScript to JavaScript
+npm run build
+
+# Run the processor
+npm run start:dist
+
+# Or for development (with live reload)
 npm start
+```
 
-# 3) Or build + run compiled output
+### Step 6: Verify Installation
+The system should:
+- ✅ Process documents from `storage/documents/not-processed/`
+- ✅ Generate summaries using local AI models
+- ✅ Extract entities and classify documents
+- ✅ Save results to `storage/documents/processed/` and `storage/metadata/`
+
+## Quick Start Commands
+## Quick Start Commands
+```powershell
+# Complete setup from scratch
+git clone https://github.com/7236alok/kmrl-doc-processor.git
+cd kmrl-doc-processor
+npm install
 npm run build
 npm run start:dist
 ```
 
-If `npm run setup-env` is unavailable, use:
+## Detailed Setup Instructions
+
+### For Windows Users:
 ```powershell
+# 1) Install dependencies
 npm install
+
+# 2) Create environment file (optional)
+echo 'OCR_AUTO_DOWNLOAD=1' > .env
+echo 'OCR_LANGUAGES=eng,hin,mal' >> .env
+
+# 3) Build project
+npm run build
+
+# 4) Start processing
+npm run start:dist
+```
+
+### For Linux/Mac Users:
+```bash
+# 1) Install dependencies
+npm install
+
+# 2) Create environment file (optional)
+echo "OCR_AUTO_DOWNLOAD=1" > .env
+echo "OCR_LANGUAGES=eng,hin,mal" >> .env
+
+# 3) Build and run
+npm run build
+npm run start:dist
 ```
 
 ## Environment & Requirements
@@ -114,6 +213,67 @@ node --loader ts-node/esm ./src/tests/ocr.test.ts
 - Parallel execution with `Promise.allSettled()` to isolate failures
 - Always persist partial results when possible
 - Strong typing with strict TS config (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)
+
+## Common Issues & Troubleshooting
+
+### 🔧 Setup Issues
+
+**Problem: "Module not found" errors**
+```powershell
+# Solution: Ensure Node.js 22.14.x is installed
+node --version  # Should show v22.14.x
+npm install     # Reinstall dependencies
+```
+
+**Problem: TypeScript compilation errors**
+```powershell
+# Solution: Clean build and reinstall
+rm -rf node_modules package-lock.json
+npm install
+npm run build
+```
+
+**Problem: Tesseract language files missing**
+```powershell
+# Solution: Download language data manually
+npm run download-tessdata
+# Or set OCR_AUTO_DOWNLOAD=1 in .env file
+```
+
+**Problem: "Transformer model unavailable" warnings**
+```powershell
+# Solution: Models will download automatically on first use
+# Or manually download with:
+npm run download-models
+```
+
+### 🚀 First Run Checklist
+
+After cloning from GitHub:
+- [ ] Node.js 22.14.x installed
+- [ ] `npm install` completed successfully  
+- [ ] `npm run build` completes without errors
+- [ ] Create `.env` file with `OCR_AUTO_DOWNLOAD=1`
+- [ ] Place test documents in `storage/documents/not-processed/`
+- [ ] Run `npm run start:dist`
+- [ ] Check `storage/documents/processed/` for results
+
+### 📁 Directory Structure After Setup
+```
+kmrl-doc-processor/
+├── node_modules/           # Dependencies (auto-created)
+├── dist/                   # Compiled JS (after npm run build)
+├── models/                 # AI models (auto-downloaded)
+├── tessdata/               # OCR language files (auto-downloaded)
+├── storage/
+│   ├── documents/
+│   │   ├── not-processed/  # Input: Place documents here
+│   │   └── processed/      # Output: Results appear here
+│   └── metadata/           # Extracted metadata JSON
+├── src/                    # Source code
+├── .env                    # Environment variables (create this)
+└── package.json
+```
 
 ## Common Issues
 - Missing Tesseract files → place traineddata files in `./tessdata`
