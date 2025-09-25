@@ -1,0 +1,4 @@
+{
+  "serviceAccountKeyPath": "path/to/service-account-key.json",
+  "processedFolderId": "DRIVE_FOLDER_ID_FOR_PROCESSED_FILES"
+}

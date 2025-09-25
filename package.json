@@ -1,0 +1,59 @@
+{
+  "name": "kmrl-doc-processor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --import \"data:text/javascript,import { register } from 'node:module'; import { pathToFileURL } from 'node:url'; register('ts-node/esm', pathToFileURL('./'));\" src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start:dist": "npm run build && node ./dist/src/index.js",
+    "setup-env": "npm install && npx tsc -p tsconfig.json",
+    "download-models": "node ./scripts/download-models.mjs",
+    "download:summarizer": "node --import \"data:text/javascript,import { register } from 'node:module'; import { pathToFileURL } from 'node:url'; register('ts-node/esm', pathToFileURL('./'));\" ./scripts/download-summarization-model.ts",
+    "download-tessdata": "node ./scripts/download-tessdata.mjs",
+    "test:drive-sa-upload": "node ./scripts/test-sa-upload.mjs",
+    "test:summarizer:local": "node ./scripts/test-summarizer-local.mjs \"C:/Users/7236a/Desktop/kmrl-doc-processor/models\"",
+    "check:models": "node ./scripts/check-models.mjs",
+    "run:offline:sum": "node --import \"data:text/javascript,import { register } from 'node:module'; import { pathToFileURL } from 'node:url'; register('ts-node/esm', pathToFileURL('./'));\" ./scripts/run-offline-summarizer.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check:summarizer:fallback": "node --import \"data:text/javascript,import { register } from 'node:module'; import { pathToFileURL } from 'node:url'; register('ts-node/esm', pathToFileURL('./'));\" ./src/tests/helpers/run_summarize.ts --mode=fallback --lang=en --text=\"Short input for fallback path.\"",
+    "check:summarizer:mock": "node --import \"data:text/javascript,import { register } from 'node:module'; import { pathToFileURL } from 'node:url'; register('ts-node/esm', pathToFileURL('./'));\" ./src/tests/helpers/run_summarize.ts --mode=mock --lang=en --text=\"Short input for model path.\"",
+    "fetch:drive:public": "node --loader ts-node/esm ./src/scripts/fetch-drive-public.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "adm-zip": "^0.5.16",
+    "docx": "^9.5.1",
+    "dotenv": "^16.6.1",
+    "franc-min": "^6.2.0",
+    "fs-extra": "^11.3.2",
+    "googleapis": "^122.0.0",
+    "mammoth": "^1.11.0",
+    "node-fetch": "^3.3.2",
+    "onnxruntime-node": "^1.22.0-rev",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^4.6.82",
+    "sharp": "0.32.6",
+    "tesseract.js": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.6",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
+    "@types/fs-extra": "^11.0.4",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.5.2",
+    "nodemon": "^3.1.10",
+    "p-limit": "^7.1.1",
+    "pdfkit": "^0.13.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "overrides": {
+    "sharp": "0.32.6"
+  }
+}
