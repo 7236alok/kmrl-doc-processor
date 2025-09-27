@@ -1,0 +1,100 @@
+{
+  "document_id": "test-enhanced-001",
+  "timestamp": "2025-09-27T16:25:49.663Z",
+  "source": "kmrl-doc-processor-mongodb",
+  "dataset_version": "1.0",
+  "metadata": {
+    "id": "test-enhanced-001",
+    "fileName": "test-enhanced-document.txt",
+    "originalName": "test-enhanced-document.txt",
+    "extension": "txt",
+    "sizeBytes": 1024,
+    "language": "English",
+    "summary": "This is a test document for enhanced storage system validation",
+    "classification": {
+      "category": "Testing",
+      "confidence": 0.95,
+      "all_categories": [
+        {
+          "category": "Testing",
+          "confidence": 0.95,
+          "score": 0.95
+        }
+      ]
+    },
+    "entities": {
+      "persons": [
+        "Test Engineer"
+      ],
+      "dates": [
+        "2025-09-27"
+      ],
+      "locations": [
+        "Local System"
+      ],
+      "organizations": [
+        "KMRL",
+        "Testing Department"
+      ]
+    },
+    "actionItems": [
+      {
+        "text": "Test enhanced storage",
+        "priority": "high",
+        "category": "testing"
+      },
+      {
+        "text": "Verify dataset upload",
+        "priority": "medium",
+        "category": "validation"
+      }
+    ],
+    "dueDates": [
+      "2025-09-30"
+    ],
+    "confidenceScores": {
+      "overall": 0.85,
+      "summarization": 0.9,
+      "entityExtraction": 0.8,
+      "classification": 0.95
+    },
+    "urgencyLevel": "medium",
+    "estimatedEffort": {
+      "hours": 1,
+      "complexity": "low",
+      "confidence": 0.8
+    },
+    "processingPipeline": {
+      "version": "2.0.0-enhanced",
+      "steps": [
+        "ocr",
+        "summary",
+        "ner",
+        "classification"
+      ],
+      "processingTime": 1500,
+      "timestamp": "2025-09-27T16:17:54.928Z"
+    },
+    "generatedAt": "2025-09-27T16:17:54.931Z",
+    "uploadedToMongoDB": "2025-09-27T16:24:22.670Z",
+    "departments": [
+      "Engineering",
+      "Testing"
+    ],
+    "sourceSystem": "Manual Upload"
+  },
+  "features": {
+    "text_length": 62,
+    "entity_count": 4,
+    "action_item_count": 2,
+    "confidence_overall": 0.85,
+    "has_due_dates": true,
+    "department_count": 2
+  },
+  "labels": {
+    "category": "Testing",
+    "urgency": "medium",
+    "safety_relevant": false,
+    "compliance_flags": false
+  }
+}

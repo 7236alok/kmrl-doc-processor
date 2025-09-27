@@ -5,7 +5,8 @@ import { extractEntities } from "../ner/index.js";
 import { classifyDocument } from "../classification/index.js";
 import { generateEmbedding } from "../embeddings/index.js";
 import { buildMetadata } from "../metadata/index.js";
-import { saveDocument, saveMetadata } from "../../utils/storage-utils.js";
+import { saveDocument } from "../../utils/storage-utils.js";
+import { saveEnhancedMetadata } from "../../utils/enhanced-storage-utils.js";
 import { readFileSync } from "fs";
 import { detectLanguage, initLangDetect } from "../../utils/text-utils.js";
 import { normalizeLangCode } from "../../utils/lang-utils.js";
@@ -78,7 +79,7 @@ export async function runPipeline(filePath: string, docId: string) {
 
   console.log("Saving document and metadata...");
   await saveDocument(docId, translationResult.translatedText);
-  await saveMetadata(docId, metadata);
+  await saveEnhancedMetadata(docId, metadata, true); // true = upload to dataset
 
   console.log("Pipeline completed successfully.");
   return metadata;

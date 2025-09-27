@@ -1,0 +1,129 @@
+{
+  "document_id": "0",
+  "timestamp": "2025-09-27T16:25:49.720Z",
+  "source": "kmrl-doc-processor-mongodb",
+  "dataset_version": "1.0",
+  "metadata": {
+    "id": "0",
+    "fileName": "0.docx",
+    "originalName": "0.docx",
+    "extension": "docx",
+    "sizeBytes": 4204,
+    "language": "English",
+    "summary": "",
+    "classification": {
+      "category": "Safety",
+      "confidence": 0.75,
+      "all_categories": [
+        {
+          "category": "Safety",
+          "confidence": 0.75,
+          "score": 0.75
+        },
+        {
+          "category": "Engineering",
+          "confidence": 0.75,
+          "score": 0.75
+        },
+        {
+          "category": "Operations",
+          "confidence": 0.75,
+          "score": 0.75
+        }
+      ]
+    },
+    "entities": {
+      "persons": [
+        "Home About",
+        "Projects Contact",
+        "Tech Tnnovati",
+        "Technical Expertise",
+        "Stack Developer",
+        "Enthusiast Smart",
+        "India Hackathon",
+        "Finalist Real",
+        "Cybersecurity Systems",
+        "Technologies Avg",
+        "Finalist Al",
+        "Libraries Machine",
+        "Leaming Al",
+        "Human Resources",
+        "Mandatory Safety",
+        "Topics Covered",
+        "Distributed Denial",
+        "Description Data",
+        "Feature Extraction",
+        "Streaming Kafka",
+        "Applies Logistic",
+        "Grafana Stores",
+        "Results Achievements",
+        "Latency Real",
+        "Integration Successfully",
+        "Grafana Deployment"
+      ],
+      "dates": [
+        "Oct 6, 2024",
+        "February 10, 2025",
+        "February 15, 2025"
+      ],
+      "locations": [
+        "Kalamassery"
+      ],
+      "organizations": [
+        "KMRL",
+        "Engineering"
+      ]
+    },
+    "actionItems": [],
+    "dueDates": [
+      "2024-10-05",
+      "2025-02-09",
+      "2025-02-14"
+    ],
+    "confidenceScores": {
+      "overall": 0.7,
+      "summarization": 0.8,
+      "entityExtraction": 0.7,
+      "classification": 0.75
+    },
+    "urgencyLevel": "medium",
+    "estimatedEffort": {
+      "hours": 2,
+      "complexity": "medium",
+      "confidence": 0.5
+    },
+    "processingPipeline": {
+      "version": "2.0.0-light",
+      "steps": [
+        "ocr",
+        "summary",
+        "ner",
+        "classification"
+      ],
+      "processingTime": 0,
+      "timestamp": "2025-09-25T11:38:23.570Z"
+    },
+    "generatedAt": "2025-09-25T11:38:23.570Z",
+    "uploadedToMongoDB": "2025-09-27T16:24:22.496Z",
+    "departments": [
+      "Safety",
+      "Engineering",
+      "Operations"
+    ],
+    "sourceSystem": "Manual Upload"
+  },
+  "features": {
+    "text_length": 0,
+    "entity_count": 29,
+    "action_item_count": 0,
+    "confidence_overall": 0.7,
+    "has_due_dates": true,
+    "department_count": 3
+  },
+  "labels": {
+    "category": "Safety",
+    "urgency": "medium",
+    "safety_relevant": true,
+    "compliance_flags": false
+  }
+}
