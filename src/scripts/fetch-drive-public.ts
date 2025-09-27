@@ -232,50 +232,79 @@ async function uploadAndDelete(originalId: string, localPath: string, origName: 
   } catch (e) { console.warn('[drive-public] uploadAndDelete failed:', (e as Error).message); }
 }
 
+import { connectToDatabase, getDb, closeDatabase } from '../db/mongo-adapter.js';
 export async function run() {
-  await ensureOutDir();
-  // First, process any local uploads specified in storage/file-upload.json
-  const localItems = await loadLocalUploadManifest();
-  if (localItems && localItems.length) {
-    console.log(`[drive-public] Processing ${localItems.length} local upload item(s) from storage/file-upload.json ...`);
-    for (const item of localItems) {
-      try {
-        const { outPath, finalName } = await placeIntoOutDir(item);
-        console.log('[drive-public] Local saved ->', outPath);
-        // Also upload to destination folder via SA (if configured)
-        await uploadLocalToDestination(outPath, finalName);
-      } catch (e) {
-        console.error('[drive-public] Local upload error for', item.path, (e as Error).message);
-      }
-    }
-  }
-  const state = await loadState();
-  let pageToken: string | undefined;
-  do {
-    const data = await listFiles(pageToken);
-    const files = data.files || [];
-    for (const f of files) {
-      if (f.id === DESTINATION_FOLDER_ID) { if (DEBUG) console.log('[drive-public] Skipping destination folder reference'); continue; }
-      try {
-        const prev = state[f.id];
-        if (prev && prev.modifiedTime === f.modifiedTime) { if (DEBUG) console.log('Skip unchanged', f.name); continue; }
-        console.log('[drive-public] Downloading', f.name, f.id);
-        const out = await downloadFile(f);
-        console.log('[drive-public] Saved', out);
-        if (DRY_RUN) {
-          console.log('[drive-public] Dry-run: skipping upload/delete and state update for', f.name);
-        } else {
-          await uploadAndDelete(f.id, out, f.name);
-          state[f.id] = { id: f.id, modifiedTime: f.modifiedTime };
-          await saveState(state);
+  console.log('[drive-public] Starting run...');
+  try {
+    console.log('[drive-public] Connecting to database...');
+    await connectToDatabase();
+    console.log('[drive-public] Database connected.');
+
+    await ensureOutDir();
+    const localItems = await loadLocalUploadManifest();
+    if (localItems && localItems.length) {
+      console.log(`[drive-public] Processing ${localItems.length} local upload item(s) from storage/file-upload.json ...`);
+      for (const item of localItems) {
+        try {
+          const { outPath, finalName } = await placeIntoOutDir(item);
+          console.log('[drive-public] Local saved ->', outPath);
+          await uploadLocalToDestination(outPath, finalName);
+        } catch (e) {
+          console.error('[drive-public] Local upload error for', item.path, (e as Error).message);
         }
-      } catch (e) {
-        console.error('[drive-public] File error', f.name, (e as Error).message);
       }
     }
-    pageToken = data.nextPageToken;
-  } while (pageToken);
-  console.log('[drive-public] Done.');
+
+    const state = await loadState();
+    let pageToken: string | undefined;
+    do {
+      console.log('[drive-public] Listing files from Google Drive...');
+      const data = await listFiles(pageToken);
+      console.log(`[drive-public] Found ${data.files?.length || 0} files in this page.`);
+      const files = data.files || [];
+      for (const f of files) {
+        if (f.id === DESTINATION_FOLDER_ID) { if (DEBUG) console.log('[drive-public] Skipping destination folder reference'); continue; }
+        try {
+          const prev = state[f.id];
+          if (prev && prev.modifiedTime === f.modifiedTime) { if (DEBUG) console.log('Skip unchanged', f.name); continue; }
+          console.log('[drive-public] Downloading', f.name, f.id);
+          const out = await downloadFile(f);
+          console.log('[drive-public] Saved', out);
+
+          const db = getDb();
+          const metadataCollection = db.collection('metadata');
+          const storageMetadata = {
+            driveId: f.id,
+            name: f.name,
+            mimeType: f.mimeType,
+            modifiedTime: f.modifiedTime,
+            size: f.size,
+            downloadedAt: new Date(),
+            processed: false,
+            storagePath: out
+          };
+          await metadataCollection.insertOne(storageMetadata);
+          console.log('[drive-public] Stored metadata to MongoDB for', f.name);
+
+          if (DRY_RUN) {
+            console.log('[drive-public] Dry-run: skipping upload/delete and state update for', f.name);
+          } else {
+            await uploadAndDelete(f.id, out, f.name);
+            state[f.id] = { id: f.id, modifiedTime: f.modifiedTime };
+            await saveState(state);
+          }
+        } catch (e) {
+          console.error('[drive-public] File error', f.name, (e as Error).message);
+        }
+      }
+      pageToken = data.nextPageToken;
+    } while (pageToken);
+    console.log('[drive-public] Done.');
+  } finally {
+    console.log('[drive-public] Closing database connection...');
+    await closeDatabase();
+    console.log('[drive-public] Database connection closed.');
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}` || /fetch-drive-public(\.ts|\.js)$/.test(process.argv[1] || '')) {

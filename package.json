@@ -18,7 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "check:summarizer:fallback": "node --import \"data:text/javascript,import { register } from 'node:module'; import { pathToFileURL } from 'node:url'; register('ts-node/esm', pathToFileURL('./'));\" ./src/tests/helpers/run_summarize.ts --mode=fallback --lang=en --text=\"Short input for fallback path.\"",
     "check:summarizer:mock": "node --import \"data:text/javascript,import { register } from 'node:module'; import { pathToFileURL } from 'node:url'; register('ts-node/esm', pathToFileURL('./'));\" ./src/tests/helpers/run_summarize.ts --mode=mock --lang=en --text=\"Short input for model path.\"",
-    "fetch:drive:public": "node --loader ts-node/esm ./src/scripts/fetch-drive-public.ts"
+    "fetch:drive:public": "npm run build && node ./dist/src/scripts/fetch-drive-public.js"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +33,7 @@
     "fs-extra": "^11.3.2",
     "googleapis": "^122.0.0",
     "mammoth": "^1.11.0",
+    "mongodb": "^6.20.0",
     "node-fetch": "^3.3.2",
     "onnxruntime-node": "^1.22.0-rev",
     "pdf-parse": "^1.1.1",
